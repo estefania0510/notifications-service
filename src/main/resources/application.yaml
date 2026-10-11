@@ -12,3 +12,9 @@ spring:
 
 server:
   port: 8081
+
+aws:
+  region: us-east-1
+  sqs:
+    endpoint: http://localhost:4566
+    order-confirmed-queue-url: http://sqs.us-east-1.localhost:4566/000000000000/pedido-confirmado-queue
