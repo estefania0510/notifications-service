@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: notifications
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - notifications_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d notifications"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  aws-emulator:
+    image: ghcr.io/nimbus-local/nimbus:latest
+    ports:
+      - "4566:4566"
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"   # SMTP (lo usa el servicio)
+      - "8025:8025"   # bandeja web
+
+volumes:
+  notifications_pgdata:
