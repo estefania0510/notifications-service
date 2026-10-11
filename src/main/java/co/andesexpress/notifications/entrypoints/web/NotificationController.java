@@ -28,7 +28,7 @@ public class NotificationController {
     @PostMapping("/events")
     public NotificationResponse receiveEvent(@Valid @RequestBody EventRequest request) {
         return NotificationResponse.from(
-                processEvent.processEvent(request.eventType(), request.orderId()));
+                processEvent.processEvent(request.eventType(), request.orderId(), request.customerEmail()));
     }
 
     @GetMapping("/order/{orderId}")

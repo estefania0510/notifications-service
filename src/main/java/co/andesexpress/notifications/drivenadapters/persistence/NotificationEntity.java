@@ -30,6 +30,10 @@ public class NotificationEntity {
     @Column(nullable = false, length = 30)
     private NotificationType type;
 
+    // Nullable a propósito: las filas viejas (antes del correo) no lo tienen.
+    @Column(name = "customer_email", length = 254)
+    private String customerEmail;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private NotificationStatus status;
@@ -44,11 +48,12 @@ public class NotificationEntity {
         // requerido por JPA
     }
 
-    public NotificationEntity(String id, String orderId, NotificationType type,
+    public NotificationEntity(String id, String orderId, NotificationType type, String customerEmail,
                               NotificationStatus status, Instant createdAt, String errorMessage) {
         this.id = id;
         this.orderId = orderId;
         this.type = type;
+        this.customerEmail = customerEmail;
         this.status = status;
         this.createdAt = createdAt;
         this.errorMessage = errorMessage;
@@ -57,6 +62,7 @@ public class NotificationEntity {
     public String getId() { return id; }
     public String getOrderId() { return orderId; }
     public NotificationType getType() { return type; }
+    public String getCustomerEmail() { return customerEmail; }
     public NotificationStatus getStatus() { return status; }
     public Instant getCreatedAt() { return createdAt; }
     public String getErrorMessage() { return errorMessage; }

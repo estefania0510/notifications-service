@@ -9,6 +9,9 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
+  mail:
+    host: localhost
+    port: 1025
 
 server:
   port: 8081
@@ -18,3 +21,10 @@ aws:
   sqs:
     endpoint: http://localhost:4566
     order-confirmed-queue-url: http://sqs.us-east-1.localhost:4566/000000000000/pedido-confirmado-queue
+
+notifications:
+  channel: email   # email | webhook | log
+  email:
+    from: notificaciones@andesexpress.co
+  webhook:
+    url: https://webhook.site/7bf4ed11-e486-4f4f-a992-2c65b7895860

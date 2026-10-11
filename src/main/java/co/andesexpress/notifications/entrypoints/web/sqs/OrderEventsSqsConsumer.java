@@ -21,7 +21,7 @@ public class OrderEventsSqsConsumer {
     private static final Logger log = LoggerFactory.getLogger(OrderEventsSqsConsumer.class);
 
     /** Forma del mensaje que publica orders: {"eventType": "...", "orderId": "..."} */
-    public record EventMessage(String eventType, String orderId) {
+    public record EventMessage(String eventType, String orderId, String customerEmail, String guideUrl) {
     }
 
     private final SqsClient sqsClient;
@@ -66,7 +66,7 @@ public class OrderEventsSqsConsumer {
         }
 
         try {
-            processEvent.processEvent(event.eventType(), event.orderId());
+            processEvent.processEvent(event.eventType(), event.orderId(), event.customerEmail());
             delete(message);
         } catch (IllegalArgumentException e) {
             // Reintentar no arregla un evento inválido: se descarta.

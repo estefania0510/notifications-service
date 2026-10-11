@@ -8,12 +8,13 @@ public record NotificationResponse(
         String id,
         String orderId,
         String type,
+        String customerEmail,
         String status,
         Instant createdAt,
         String errorMessage) {
 
     public static NotificationResponse from(Notification n) {
         return new NotificationResponse(n.getId(), n.getOrderId(), n.getType().name(),
-                n.getStatus().name(), n.getCreatedAt(), n.getErrorMessage());
+                n.getCustomerEmail(), n.getStatus().name(), n.getCreatedAt(), n.getErrorMessage());
     }
 }

@@ -47,17 +47,17 @@ public class JpaNotificationRepositoryAdapter implements NotificationRepositoryP
         return jpa.findByOrderId(orderId).stream().map(this::toDomain).toList();
     }
 
-    private NotificationEntity toEntity(Notification n) {
+        private NotificationEntity toEntity(Notification n) {
         String error = n.getErrorMessage();
         if (error != null && error.length() > MAX_ERROR_LENGTH) {
             error = error.substring(0, MAX_ERROR_LENGTH);
         }
-        return new NotificationEntity(n.getId(), n.getOrderId(), n.getType(),
+        return new NotificationEntity(n.getId(), n.getOrderId(), n.getType(), n.getCustomerEmail(),
                 n.getStatus(), n.getCreatedAt(), error);
     }
 
     private Notification toDomain(NotificationEntity e) {
-        return Notification.reconstruct(e.getId(), e.getOrderId(), e.getType(),
+        return Notification.reconstruct(e.getId(), e.getOrderId(), e.getType(), e.getCustomerEmail(),
                 e.getStatus(), e.getCreatedAt(), e.getErrorMessage());
     }
 }

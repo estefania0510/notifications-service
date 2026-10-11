@@ -24,7 +24,7 @@ public class ProcessEventUseCase implements ProcessEventInputPort {
     }
 
     @Override
-    public Notification processEvent(String eventType, String orderId) {
+    public Notification processEvent(String eventType, String orderId, String customerEmail) {
         NotificationType type = NotificationType.fromEventType(eventType);
 
         // Idempotencia: el mismo evento para el mismo pedido no se procesa dos veces.
@@ -34,7 +34,15 @@ public class ProcessEventUseCase implements ProcessEventInputPort {
             return existing.get();
         }
 
-        Notification created = Notification.create(orderId, type);
+        String email = customerEmail;
+        if (type == NotificationType.GUIDE_READY && (email == null || email.isBlank())) {
+            email = repository.findByOrderIdAndType(orderId, NotificationType.ORDER_CONFIRMED)
+                    .map(Notification::getCustomerEmail)
+                    .orElseThrow(() -> new IllegalStateException(
+                            "Aún no hay correo guardado para el pedido " + orderId));
+        }
+
+        Notification created = Notification.create(orderId, type, email);
         Notification notification = repository.save(created);
 
         // Otro evento idéntico llegó primero (carrera): devolvemos esa y no enviamos de nuevo
