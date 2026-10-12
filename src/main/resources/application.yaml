@@ -1,14 +1,6 @@
 spring:
   application:
     name: notifications-service
-  datasource:
-    url: jdbc:postgresql://localhost:5432/notifications
-    username: postgres
-    password: postgres
-  jpa:
-    hibernate:
-      ddl-auto: update
-    open-in-view: false
   mail:
     host: localhost
     port: 1025
@@ -21,9 +13,13 @@ aws:
   sqs:
     endpoint: http://localhost:4566
     order-confirmed-queue-url: http://sqs.us-east-1.localhost:4566/000000000000/pedido-confirmado-queue
+  dynamodb:
+    endpoint: ""   # vacío = DynamoDB real en AWS
 
 notifications:
-  channel: email   # email | webhook | log
+  dynamodb:
+    table: notifications
+  channel: webhook   # email | webhook | log
   email:
     from: notificaciones@andesexpress.co
   webhook:

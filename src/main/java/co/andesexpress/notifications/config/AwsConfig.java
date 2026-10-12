@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClientBuilder;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.SqsClientBuilder;
 
@@ -20,6 +22,20 @@ public class AwsConfig {
         SqsClientBuilder builder = SqsClient.builder().region(Region.of(region));
 
         // Solo para el emulador local: dirección propia y credenciales de mentira.
+        if (!endpoint.isBlank()) {
+            builder.endpointOverride(URI.create(endpoint))
+                   .credentialsProvider(StaticCredentialsProvider.create(
+                           AwsBasicCredentials.create("test", "test")));
+        }
+        return builder.build();
+    }
+
+    @Bean
+    public DynamoDbClient dynamoDbClient(@Value("${aws.region:us-east-1}") String region,
+                                         @Value("${aws.dynamodb.endpoint:}") String endpoint) {
+        DynamoDbClientBuilder builder = DynamoDbClient.builder().region(Region.of(region));
+
+        // Con endpoint vacío usa AWS real y las credenciales del entorno (AWS_ACCESS_KEY_ID, etc.).
         if (!endpoint.isBlank()) {
             builder.endpointOverride(URI.create(endpoint))
                    .credentialsProvider(StaticCredentialsProvider.create(
